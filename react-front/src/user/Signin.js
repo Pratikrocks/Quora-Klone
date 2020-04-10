@@ -10,10 +10,44 @@ export default class Signin extends Component {
             password:"",
             error:"",
             redirectToRefer:false,
-            loading:false
+            loading:false,
+            recaptcha:false,
         }
     }
-
+    recaptchaHandler = (e) => {
+        let day = e.target.value.toLowerCase();
+        let dayCount ;
+        console.log(day)
+        if (day == "monday") {
+            dayCount = 1;
+        }
+        if (day == "tuesday") {
+            dayCount = 2;
+        }
+        if (day == "wednesday") {
+            dayCount = 3;
+        }
+        if (day == "thursday") {
+            dayCount = 4;
+        }
+        if (day == "friday") {
+            dayCount = 5;
+        }
+        if (day == "saturday") {
+            dayCount = 6;
+        }
+        if (day == "sunday") {
+            dayCount = 0;
+        }
+        if (dayCount == new Date().getDay()) {
+            this.setState({recaptcha:true});
+            return true;
+        }
+        else {
+            this.setState({recaptcha:false})
+        }
+        return false;
+    }
     clickSubmit = event =>{
         event.preventDefault();
         this.setState({loading:true})
@@ -23,6 +57,7 @@ export default class Signin extends Component {
             password
         };
         console.log(user)
+        if(this.state.recaptcha) {
         signIn(user)
         .then( data =>{
             if(data.error)
@@ -38,6 +73,10 @@ export default class Signin extends Component {
                 })
             }
         })
+      }
+      else {
+          this.setState({error:"Please enter a correct Captcha"})
+      }
     }
     handleChange = (name) => (event) =>{
         this.setState({error:""})
@@ -68,6 +107,13 @@ export default class Signin extends Component {
                             <label className="text-muted">Password</label>
                             <input onChange={this.handleChange("password")} type="password" className="form-control" value={this.state.password}></input>
                         </div>
+                        <div className="form-group">
+                            <label className="text-muted">
+                                {this.state.recaptcha ? "Thanks you got it " : "What day is today ?"}
+                                </label>
+                            <input onChange={this.recaptchaHandler} type="text" className="form-control" ></input>
+                        </div>
+
                         <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
                             Submit
                         </button>
