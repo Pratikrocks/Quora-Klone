@@ -25,3 +25,5 @@ Now install the node modules :
 - npm start (backend server starts in destined port).
 
 Please feel free to create an issue and submit patches.
+
+You can visit http://167.99.233.64 to view the deployment(Plaese do not upload the profile picture temporarily for now ,but you can upload the pictures for the posts, in case any error arises please refresh the pages)
