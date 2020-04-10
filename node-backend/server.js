@@ -26,10 +26,10 @@ app.use(cookieParser());
 app.use(bodyParser.json())
 app.use(expressValidator())
 app.use(cors())
-app.use("/",users)
-app.use("/",postRoute)
-app.use("/",authRoutes)
-app.get('/',(req,res)=>{
+app.use("/api",users)
+app.use("/api",postRoute)
+app.use("/api",authRoutes)
+app.get('/api',(req,res)=>{
     fs.readFile('docs/apiDocs.json',(err,data)=>{
       if(err)
       {
