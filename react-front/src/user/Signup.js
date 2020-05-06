@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import {signUp} from '../auth';
 import { Link } from 'react-router-dom';
+import "./Signup.css"
 export default class Signup extends Component {
     constructor()
     {
@@ -12,6 +13,18 @@ export default class Signup extends Component {
             error:"",
             open:false,
             recaptcha:false,
+            captcha:"",
+
+        }
+        this.unique_string = "lasdfv342535JKY#$%^&@#RGEBRNYSGERtWEewr4gEDEWF";
+        this.captcha = "";
+
+    }
+    renew_captcha = () => {
+        var i = 0;
+        this.captcha=""
+        for(i = 0;i<5;i++) {
+            this.captcha += this.unique_string.charAt(Math.random() * 50);
         }
     }
     recaptchaHandler = (e) => {
@@ -55,23 +68,27 @@ export default class Signup extends Component {
             email,
             password
         };
-        if(this.state.recaptcha ) {
-        signUp(user)
-        .then(data=>{
-            if(data.error)
-            {
-                this.setState({error:data.error})
-            }
-            else{
-                this.setState({
-                    error:"",
-                    name:"",
-                    password:"",
-                    email:"",
-                    open:true
-                })
-            }
-        })
+
+        if(this.state.recaptcha && this.captcha === this.state.captcha) {
+            signUp(user)
+            .then(data=>{
+                if(data.error)
+                {
+                    this.setState({error:data.error})
+                }
+                else{
+                    this.renew_captcha();
+                    this.setState({
+                        error:"",
+                        name:"",
+                        password:"",
+                        email:"",
+                        open:true,
+                        captcha:"",
+                        recaptcha:"",
+                    })
+                }
+            })
       }
       else {
           this.setState({error:"Please enter a correct captcha"})
@@ -81,7 +98,11 @@ export default class Signup extends Component {
         this.setState({error:""})
         this.setState({[name]:event.target.value});
     }
+    componentWillMount() {
+        this.renew_captcha();
+    }
     render(){
+        
         return (
             <div>
                 <div className="container">
@@ -111,11 +132,24 @@ export default class Signup extends Component {
                                 </label>
                             <input onChange={this.recaptchaHandler}  className="form-control" ></input>
                         </div>
+                        <div 
+                        style={{ fontFamily: "Playfair Display", color: "blue" }}
+                        variant="h1"
+                        gutterBottom
+              
+                       > 
+                            {this.captcha} 
+                        </div>
+                        <div className="form-group">
+                            <label className="text-muted">Enter the above Captcha :)</label>
+                            <input onChange={this.handleChange("captcha")}  className="form-control" value={this.state.captcha}></input>
+                        </div>
                         <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
                             Submit
                         </button>
+                        {console.log(this.unique_string.length)}
                     </form>
-                    
+                    {console.log(this.captcha)}
                 </div>
             </div>
         )
