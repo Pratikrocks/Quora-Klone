@@ -2,6 +2,9 @@ import React,{Component} from 'react';
 import {signUp} from '../auth';
 import { Link } from 'react-router-dom';
 import "./Signup.css"
+
+
+
 export default class Signup extends Component {
     constructor()
     {
@@ -14,51 +17,15 @@ export default class Signup extends Component {
             open:false,
             recaptcha:false,
             captcha:"",
+            captcha_key:""
 
         }
-        this.unique_string = "lasdfv342535JKY#$%^&@#RGEBRNYSGERtWEewr4gEDEWF";
-        this.captcha = "";
+        this.captchaMap = new Map([['1' ,'P4A2H' ],['4' ,'83tsU' ],['6' ,'PQJRYD' ],['7' ,'duolingoTM' ],['8' ,'2VYK' ],['2' ,'8HP' ],['3' ,'0096' ],['5' , '7329'],['9' ,'76447' ]])
 
     }
-    renew_captcha = () => {
-        var i = 0;
-        this.captcha=""
-        for(i = 0;i<5;i++) {
-            this.captcha += this.unique_string.charAt(Math.random() * 50);
-        }
-    }
-    recaptchaHandler = (e) => {
-        let day = e.target.value.toLowerCase();
-        let dayCount ;
-        if (day == "monday") {
-            dayCount = 1;
-        }
-        if (day == "tuesday") {
-            dayCount = 2;
-        }
-        if (day == "wednesday") {
-            dayCount = 3;
-        }
-        if (day == "thursday") {
-            dayCount = 4;
-        }
-        if (day == "friday") {
-            dayCount = 5;
-        }
-        if (day == "saturday") {
-            dayCount = 6;
-        }
-        if (day == "sunday") {
-            dayCount = 0;
-        }
-        if (dayCount == new Date().getDay()) {
-            this.setState({recaptcha:true});
-            return true;
-        }
-        else {
-            this.setState({recaptcha:false})
-        }
-        return false;
+
+    setCaptchaKey = () => {
+        
     }
     clickSubmit = event =>{
         event.preventDefault();
@@ -68,8 +35,10 @@ export default class Signup extends Component {
             email,
             password
         };
+        console.log(this.state.captcha,this.captchaMap.get(this.state.captcha_key) )
 
-        if(this.state.recaptcha && this.captcha === this.state.captcha) {
+
+        if(this.state.captcha === this.captchaMap.get(this.state.captcha_key)) {
             signUp(user)
             .then(data=>{
                 if(data.error)
@@ -77,7 +46,8 @@ export default class Signup extends Component {
                     this.setState({error:data.error})
                 }
                 else{
-                    this.renew_captcha();
+                    console.log("GHYYYH")
+                    // this.renew_captcha();
                     this.setState({
                         error:"",
                         name:"",
@@ -87,24 +57,32 @@ export default class Signup extends Component {
                         captcha:"",
                         recaptcha:"",
                     })
+                    let x = String(Math.floor(Math.random() * 9) + 1);
+                    this.setState({captcha_key: x});
+                    console.log(this.state.captcha_key)
                 }
             })
       }
       else {
           this.setState({error:"Please enter a correct captcha"})
       }
+    //   window.location.reload();
     }
     handleChange = (name) => (event) =>{
         this.setState({error:""})
         this.setState({[name]:event.target.value});
     }
     componentWillMount() {
-        this.renew_captcha();
+        // window.location.reload();
+        let x = String(Math.floor(Math.random() * 9) + 1);
+        this.setState({captcha_key: x});
+
     }
     render(){
         
         return (
             <div>
+                {/* {console.log(this.state.captcha_key,this.state.captcha)} */}
                 <div className="container">
                     <h2 className="mt-5 mb-5">Signup</h2>
                     <div className="alert alert-danger" style={{display:this.state.error ? "":"none"}}>
@@ -126,30 +104,24 @@ export default class Signup extends Component {
                             <label className="text-muted">Password</label>
                             <input onChange={this.handleChange("password")} type="password" className="form-control" value={this.state.password}></input>
                         </div>
+                        
+                        <img 
+                            style={{height:"100px", width:'auto',margin:10}} 
+                            className="img-thumbnail" 
+                            src={require("../captcha/c" + this.state.captcha_key +  ".png")} 
+                            
+                            alt={`Y`}>
+                        </img>
+                        <br/>
                         <div className="form-group">
-                            <label className="text-muted">
-                                {this.state.recaptcha ? "Thanks you got it " : "What day is today ?"}
-                                </label>
-                            <input onChange={this.recaptchaHandler}  className="form-control" ></input>
-                        </div>
-                        <div 
-                        style={{ fontFamily: "Playfair Display", color: "blue" }}
-                        variant="h1"
-                        gutterBottom
-              
-                       > 
-                            {this.captcha} 
-                        </div>
-                        <div className="form-group">
-                            <label className="text-muted">Enter the above Captcha :)</label>
-                            <input onChange={this.handleChange("captcha")}  className="form-control" value={this.state.captcha}></input>
+                            <label className="text-muted">Please Enter the Captcha</label>
+                            <input onChange={this.handleChange("captcha")} className="form-control" value={this.state.captcha}></input>
                         </div>
                         <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
                             Submit
                         </button>
-                        {console.log(this.unique_string.length)}
                     </form>
-                    {console.log(this.captcha)}
+                    {/* {console.log(this.captcha)} */}
                 </div>
             </div>
         )
