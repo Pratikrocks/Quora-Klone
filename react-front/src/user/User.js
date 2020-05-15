@@ -23,7 +23,7 @@ export default class User extends Component
             return response.json();
         })
         .then((res)=>{
-            console.log(res)
+            // console.log(res)
             this.setState({users:res});
         })
 
@@ -49,7 +49,7 @@ export default class User extends Component
                       <h5 className="card-title">{user.name}</h5>
                             <p className="card-text">{user.email}</p>
                       <p>
-                          {console.log(user.id)}
+                          {/* {console.log(user.id)} */}
                            <Link href="#" class="btn btn-raised btn-primary" to={`/user/${user._id}`}>View Profile</Link>
                       </p>
 
@@ -62,10 +62,10 @@ export default class User extends Component
     );
     render()
     {
-        {console.log("YYYy",this.state.users)}
+        // {console.log("YYYy",this.state.users)}
         return(
             <div className="container">
-                {console.log(this.state.users)}
+                {/* {console.log(this.state.users)} */}
                 <h2 className="mt-5 mb-5">Users</h2>
                     {this.renderUser(this.state.users)}
             </div>

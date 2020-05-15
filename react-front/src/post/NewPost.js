@@ -111,7 +111,7 @@ export default class NewPost extends Component
     componentDidMount()
     {
         // console.log(this.props.match.params.userId)
-        this.setState({user:isAuthenticated().user})
+        this.setState({ user: isAuthenticated().user})
         
     }
     

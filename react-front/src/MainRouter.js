@@ -35,7 +35,7 @@ const MainRouter = () => (
                 path="/user/edit/:userId"
                 component={EditProfile}>
             </PrivateRoute>
-            <Route exact path="/findpeople/" component={FindPeople}></Route>
+            <PrivateRoute exact path="/findpeople/" component={FindPeople}></PrivateRoute>
             <PrivateRoute exact path="/create/post/:userId" component={NewPost}></PrivateRoute>
             <Route exact path="/posts" component={Post}></Route>
 

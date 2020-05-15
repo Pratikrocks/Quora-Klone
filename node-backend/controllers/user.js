@@ -119,10 +119,9 @@ exports.updateUser = (req,res,next)=>{
             }
             user.hashed_password = undefined
             user.salt = undefined
-            res.json(user);
+            return res.json(user);
         
         })
-
     })
 }
 exports.deleteUser = (req,res,next)=>{

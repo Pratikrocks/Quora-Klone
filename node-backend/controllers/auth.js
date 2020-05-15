@@ -57,7 +57,7 @@ exports.signout = (req,res) =>{
     return res.json({message:"Signout Successful"})
 }
 
-exports.requieSignin = expressJwt({
+exports.requireSignin = expressJwt({
     // if the token is valid ,express jwt appends the verified users id
     // in an auth key to the request object
     

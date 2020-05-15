@@ -13,7 +13,7 @@ export default class EditProfile extends Component
             name:"",
             password:"",
             redirectToProfile:false,
-            error:"",
+            error:"",            
             fileSize:0,
             loading:false,
             about:""
@@ -28,7 +28,7 @@ export default class EditProfile extends Component
         this.userData.set(name,value);
         this.setState({[name]:value, fileSize});
     }
-    init = (userID) =>{
+    init = userID =>{
         
         const token = isAuthenticated().token
         read(userID,token)
@@ -67,25 +67,25 @@ export default class EditProfile extends Component
             .then(data=>{
                 if(data.error)
                 {
-                    this.setState({error:data.error})
+                    this.setState({error:data.error});
                 }
                 else{
                     updateUser(data,()=>{
                         this.setState({
                             redirectToProfile:true
-                        })
-                    })
+                        });
+                    });
 
                 }
-            })
+            });
       }
-    }
+    };
 
     isValid = () =>{
-        const {name,email,password} = this.state;
-        if(this.state.fileSize>700000)
+        const {name,email,password,fileSize} = this.state;
+        if(this.state.fileSize>1000000)
         {
-            this.setState({error:"File size must be less than 700kB"})
+            this.setState({error:"File size must be less than 100kB"})
             this.setState({loading:false})
             return false
         }

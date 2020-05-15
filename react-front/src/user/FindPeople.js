@@ -8,7 +8,7 @@ export default class FindPeople extends Component
 {
     constructor(props)
     {
-        super()
+        super();
         this.state = {
             users:[],
             error: "",
@@ -60,7 +60,7 @@ export default class FindPeople extends Component
                 <img 
                     style={{height:"200px", width:'auto'}} 
                     className="img-thumbnail" 
-                    src={`${process.env.REACT_APP_API_URL}/ll/user/photo/${user._id}?${new Date().getTime()}`} 
+                    src={`${process.env.REACT_APP_API_URL}/user/photo/${user._id}?${new Date().getTime()}`} 
                     onError={i=>(i.target.src=`${DefaultProfile}`)}
                     // alt={i => (i.target.src = `${DefaultProfile}`)}
                     // alt={user.name}

@@ -9,7 +9,7 @@ export const signUp = user =>{
     })
     .then(response=>{
 
-        return response.json()
+        return response.json();
     })
     .catch(err=>console.log(err))
 }
@@ -45,7 +45,7 @@ export const signout = (next) =>{
     }
     next();
     return fetch(`${process.env.REACT_APP_API_URL}/signout`,{
-        method:"GET"
+        method: 'GET'
     })
     .then((response)=>{
         console.log("Signout successful")

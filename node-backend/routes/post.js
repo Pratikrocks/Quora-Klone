@@ -14,26 +14,22 @@ const {
 } = require('../controllers/post')
 const router = express.Router();
 const {userById} = require("../controllers/user")
-const {requieSignin} = require("../controllers/auth")
+const {requireSignin} = require("../controllers/auth")
 
 // console.log(validator.createPostValidator)
-router.get('/posts',getPosts)
-router.post(
-    '/post/new/:userId',
-    requieSignin,
-    createPost,
-    createPostValidator
-)
-router.get("/post/:postId",singlePost)
-router.get("/post/by/:userId",postsByUser)
-router.delete("/post/:postId",requieSignin,isPoster, deletePost);
-router.put("/post/:postId",requieSignin,isPoster,updatePost);
-router.param("userId",userById)
-router.get('/post/photo/:postId',photo)
-// any route containing userId our app will execute userById()
-// router.param("userId",userById)
-router.param("postId",postById)
-
+router.post('/post/new/:userId', requireSignin, createPost, createPostValidator);
+router.get('/posts/by/:userId', requireSignin, postsByUser);
+router.get('/post/:postId', singlePost);
+router.put('/post/:postId', requireSignin, isPoster, updatePost);
+router.delete('/post/:postId', requireSignin, isPoster, deletePost);
+// photo
+router.get('/post/photo/:postId', photo);
+router.get('/posts', getPosts)
+router.get('',getPosts)
+// any route containing :userId, our app will first execute userById()
+router.param('userId', userById);
+// any route containing :postId, our app will first execute postById()
+router.param('postId', postById);
 
 
 module.exports = router;

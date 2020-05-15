@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import { list } from './apiPost'
 import DefaultProfile from '../images/PostImage.jpg'
 import { Link } from 'react-router-dom';
+import "./posts.css"
+
 export default class Posts extends Component
 {
     constructor(props)
@@ -36,8 +38,9 @@ export default class Posts extends Component
                 // <div className="card" style={{width:"22rem"}}>
                 const posterId = post.postedBy ? post.postedBy._id : ""
                 const posterName = post.postedBy ? post.postedBy.name : ""
+                const class_ = i%2 ? "light" : "dark"
                 return (
-                <div className="card col-md-4" key={i}>
+                <div className={"card col-md-4 buldge_cards curve_borders " + (i % 2 ? "light" : "dark")}  key={i}>
                 {/* <img 
                     style={{height:"200px", width:'auto'}} 
                     className="img-thumbnail" 
@@ -78,7 +81,7 @@ export default class Posts extends Component
         return(
             <div className="container">
                 {console.log(this.state.posts)}
-                <h2 className="mt-5 mb-5">Recent Posts</h2>
+                <h2 className="mt-5 mb-5 buldge">Recent Posts</h2>
                     {this.renderPosts(this.state.posts)}
             </div>
         )

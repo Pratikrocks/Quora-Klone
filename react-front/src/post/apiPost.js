@@ -55,7 +55,7 @@ export const update = (postID,token,post) =>{
 }
 
 export const listByUser = (userID,token) =>{
-    return fetch(`${process.env.REACT_APP_API_URL}/post/by/${userID}`,{
+    return fetch(`${process.env.REACT_APP_API_URL}/posts/by/${userID}`,{
         method:"GET",
         headers: {
             Accept:"application/json",
