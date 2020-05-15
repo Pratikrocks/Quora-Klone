@@ -17,14 +17,10 @@ exports.userById=(req,res,next,id)=>{
             })
         }
         req.profile = user //add profile object in request 
-        // console.log("***")
-        // console.log(req.profile)
-        // console.log("***")
-        
-        // console.log("YYUY")
+
         next();
-    })
-}
+    });
+};
 
 exports.hasAuthorization =(req,res,next)=>{
     const authorized = req.profile && req.auth && req.profile._id === req.auth._id
@@ -114,7 +110,7 @@ exports.updateUser = (req,res,next)=>{
             user.photo.data = fs.readFileSync(files.photo.path)
             user.photo.contentType = files.photo.type
         }
-        user.save((err)=>{
+        user.save((err,result)=>{
             if(err)
             {
                 return res.status(400).json({
@@ -127,9 +123,7 @@ exports.updateUser = (req,res,next)=>{
         
         })
 
-        // next();
-    }) 
-    // next();
+    })
 }
 exports.deleteUser = (req,res,next)=>{
     let user = req.profile

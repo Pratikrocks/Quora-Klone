@@ -64,24 +64,28 @@ export default class NewPost extends Component
     // }
     clickSubmit = event =>{
         event.preventDefault();
-        console.log(this.props.match)
         this.setState({loading:true})
         if(this.isValid())
         {
 
-            const userId = this.props.match.params.userId;
+            const userId = isAuthenticated().user._id;
             const token = isAuthenticated().token;
             console.log(userId)
             create(userId,token,this.postData)
             .then(data=>{
                 if(data.error)
                 {
-                    
-                    this.setState({error:data.error})
+
+                    this.setState({error:data.error.message})
                 }
                 else{
-                    console.log(data)
-                    this.setState({loading:false,title:"",body:"",photo:"",redirectToProfile:true})
+                    this.setState({
+                        loading:false,
+                        title:"",
+                        body:"",
+                        photo:"",
+                        redirectToProfile:true
+                    })
                 }
             })
       }

@@ -62,5 +62,5 @@ exports.requieSignin = expressJwt({
     // in an auth key to the request object
     
     secret:process.env.JWT_SECRET,
-    userProperty:"auth",
+    userProperty:'auth',
 })
