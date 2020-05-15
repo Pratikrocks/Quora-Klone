@@ -13,7 +13,7 @@ const cors = require("cors")
 const cookieParser = require("cookie-parser");
 dotenv.config()
 
-mongoose.connect(`mongodb://127.0.0.1:27017/nodeapi`,{useNewUrlParser:true,useFindAndModify:false})
+mongoose.connect(process.env.MONGO_URL,{useNewUrlParser:true,useFindAndModify:false})
 .then(()=>{
     console.log('DB connected')
 })

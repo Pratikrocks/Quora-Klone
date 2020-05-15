@@ -15,8 +15,9 @@ class Profile extends React.Component
     {
         super()
         this.state = {
-            user:{followers:[],following:[]},
+            user: { followers:[], following:[]},
             redirectToSignin:false,
+            error:"",
             following:false,
             posts:[]
         }
@@ -29,15 +30,13 @@ class Profile extends React.Component
         return match
     }
     init = userID =>{
-        console.log(`${process.env.REACT_APP_API_URL}/${userID}`)
         const token = isAuthenticated().token
         // console.log(userID,token)
         read(userID,token)
         .then(data=>{
-            console.log(data)
             if(data.error)
             {
-                this.setState({redirectToSignIn:true})
+                this.setState({redirectToSignin:true})
             }
             else{
                 let following = this.checkFollow(data)
@@ -80,15 +79,13 @@ class Profile extends React.Component
 
     componentDidMount()
     {
-        // console.log(this.props)
-        // console.log(this.props.match.params.userId)
+
         const userID = this.props.match.params.userId
         this.init(userID);
         
     }
     componentWillReceiveProps(props)
     {
-        console.log(props.match.params.userId)
         const userID = props.match.params.userId
         this.init(userID);
     }
@@ -97,9 +94,12 @@ class Profile extends React.Component
         const redirectToSignIn = this.state.redirectToSignin;
         if(redirectToSignIn)
         {   return(
-            <Redirect to="/new"/>)
+            <Redirect to="/signin"/>)
         }
-        const photoUrl = this.state.user._id?`${process.env.REACT_APP_API_URL}/user/photo/${this.state.user._id}?${new Date().getTime()}`: DefaultProfile
+        const photoUrl = this.state.user._id?`${process.env.REACT_APP_API_URL}/user/photo/
+            ${this.state.user._id}?${new Date().getTime()}`
+            : 
+        DefaultProfile
         // console.log(isAuthenticated().user._id)
         return(
             
@@ -113,8 +113,10 @@ class Profile extends React.Component
                 style={{height:"200px", width:'auto'}} 
                 className="img-thumbnail" 
                 src={photoUrl} 
+                onError={i => {i.target.src = `${DefaultProfile}`}}
+                alt={this.state.name}>
                 
-                alt={this.state.name}></img>
+                </img>
                <br></br>
                <br></br>
                <hr/>

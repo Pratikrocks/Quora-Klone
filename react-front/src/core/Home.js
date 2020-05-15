@@ -2,8 +2,7 @@ import React from 'react'
 
 const Home = () => (
     <div className="jumbotron">
-        <h2>Home</h2>
-        <p className="lead">Welcome to react</p>
+        <p className="lead">Welcome to Quora Klone</p>
     </div>    
 )
 export default Home;
