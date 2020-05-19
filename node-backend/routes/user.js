@@ -11,13 +11,17 @@ const {userById,
     addFollower,
     removeFollower,
     removeFollowing,
-    findPeople
+    findPeople,
+    getParticularUser,
     } = require("../controllers/user")
 const {requireSignin} = require("../controllers/auth")
 
 // console.log(validator.createPostValidator)
 router.put("/user/follow", requireSignin, addFollowing, addFollower);
 router.put("/user/unfollow", requireSignin, removeFollowing, removeFollower);
+
+// get a particular user details when not logged in
+router.get("/getUser/:userId",getParticularUser);
 
 router.get("/users", allUsers);
 router.get("/user/:userId", requireSignin, getUser);

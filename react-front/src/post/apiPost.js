@@ -24,6 +24,7 @@ export const list = () =>{
     })
 }
 
+
 export const SinglePost = (postId) =>{
     console.log(postId)
     return fetch(`${process.env.REACT_APP_API_URL}/post/${postId}`,{
@@ -85,4 +86,16 @@ export const remove = (postID,token) =>{
         return response.json()
     })
     .catch(err => console.log(err))
+}
+
+export const getComments = (postID) => {
+    return fetch(`${process.env.REACT_APP_API_URL}/post/comments/${postID}`, {
+        method: "GET"
+    })
+    .then(response =>{
+        return response.json();
+    })
+    .catch(err=>{
+        console.log(err);
+    })
 }

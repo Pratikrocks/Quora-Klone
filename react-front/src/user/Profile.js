@@ -31,7 +31,7 @@ class Profile extends React.Component
     }
     init = userID =>{
         const token = isAuthenticated().token
-        // console.log(userID,token)
+        console.log("user id is : ",userID, token)
         read(userID,token)
         .then(data=>{
             if(data.error)
@@ -40,7 +40,7 @@ class Profile extends React.Component
             }
             else{
                 let following = this.checkFollow(data)
-                
+                console.log("success");
                 this.setState({user:data,following})
                 this.loadPost(data._id)
             }
@@ -100,7 +100,6 @@ class Profile extends React.Component
             ${this.state.user._id}?${new Date().getTime()}`
             : 
         DefaultProfile
-        // console.log(isAuthenticated().user._id)
         return(
             
             <div className="container">

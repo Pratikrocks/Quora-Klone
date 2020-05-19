@@ -96,6 +96,23 @@ export const unfollow = (userID,token,unfollowId) =>{
     })
     .catch(err=>console.log(err))
 }
+
+export const getUser = (userId) => {
+    return fetch(`${process.env.REACT_APP_API_URL}/getUser/${userId}`, {
+        method: "GET",
+        headers: {
+            Accept:"application/json",
+            'Content-Type':'application/json', 
+        }
+    })
+    .then(response => {
+        return response.json()
+    })
+    .catch(err => {
+        console.log(err)
+    })
+}
+
 export const findPeople = (userID,token) =>{
     // console.log(userID,followId)
     return fetch(`${process.env.REACT_APP_API_URL}/xx/user/findpeople/${userID}`,{

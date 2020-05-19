@@ -1,7 +1,9 @@
 import React,{Component} from 'react';
-import {SinglePost ,remove} from "./apiPost"
+import {SinglePost ,remove ,getComments} from "./apiPost"
 import { Link ,Redirect} from 'react-router-dom';
 import {isAuthenticated} from "../auth/index"
+import {getUser} from '../user/apiUser'
+
 export default class singlePost extends Component {
     state = {
         postId : "",
@@ -10,7 +12,9 @@ export default class singlePost extends Component {
         postedBy: '',
         created:"",
         loading:true,
-        deleted:false
+        deleted:false,
+        comments: 0,
+        commentedBy: "",
     }
     componentDidMount = () => {
         const postId = this.props.match.params.postId
@@ -50,6 +54,55 @@ export default class singlePost extends Component {
         {
             this.deletePost()
         }
+    }
+    componentWillMount = () => {
+        const postId = this.props.match.params.postId;
+        getComments(postId)
+            .then((result) => {
+                if(result.error) {
+
+                }
+                else {
+                    this.setState({comments:result});
+                }
+            })
+    }
+    getUserName = (userId) => {
+        let username;
+        console.log(userId)
+        getUser(userId)
+        .then(data=> {
+            if(data.error) {
+                console.log(data.error)
+            }
+            // console.log(data.user.name)
+            username = data.user.name;
+            console.log(username)
+            this.setState({commentedBy : username})
+            return
+        })
+    }
+    loadComments = (Comments) => {
+        console.log(Comments)
+        return (
+            <div>
+                {Comments.map((comment,i) =>{
+                    return(
+                    <div key={i}>
+                            {/* {this.getUserName(comment.authorReference)} */}
+                            <Link 
+                                to={`/user/${comment.authorReference}`}
+                            >
+                                user
+                            </Link>                          
+                            <p>{comment.body}</p>                        
+                        <hr/>
+                    </div>
+                    )
+                })
+                }
+           </div>
+        )
     }
     render() {
         if(this.state.deleted) {
@@ -97,6 +150,11 @@ export default class singlePost extends Component {
                       </p>
 
                 </div>    
+                </div>
+                <div className="container">
+                    <p>Comments({this.state.comments.length})</p>
+                    <hr/>
+                    {this.state.comments.length ? this.loadComments(this.state.comments) : null}
                 </div>
             </div>
                 }

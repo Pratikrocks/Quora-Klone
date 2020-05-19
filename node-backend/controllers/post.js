@@ -1,6 +1,8 @@
 const Post = require("../models/post")
+const Comments = require('../models/comments')
 const formidable = require("formidable")
 const fs = require('fs')
+const jwt = require("jsonwebtoken")
 const _ = require('lodash')
 exports.postById = (req,res,next,id)=>{
 
@@ -137,4 +139,65 @@ exports.photo = (req,res,next) => {
 exports.singlePost = (req,res,next) =>{
     console.log(req.post)
     return res.json(req.post)
+}
+//    comments backend
+exports.addComment = (req ,res ,next) => {
+    try {
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZvbGxvd2luZyI6W10sImZvbGxvd2VycyI6W10sIl9pZCI6IjVlYzE2ZmRiYjUzZWI5MGM0NzljOWNhYiIsIm5hbWUiOiJ1c2VyXzIiLCJlbWFpbCI6InVzZXJfMkBnbWFpbC5jb20iLCJzYWx0IjoiMzYxYTYyZDAtOTg2MS0xMWVhLTk3OWUtNzFjNTkxOWMyZmM1IiwiaGFzaGVkX3Bhc3N3b3JkIjoiYWNlMjA0N2I1ZjAwMjk0OGVkMjYwNDA0YzlkNmRkOTFlNmU0MmE2OCIsImNyZWF0ZWQiOiIyMDIwLTA1LTE3VDE3OjA5OjQ3LjUxOFoiLCJfX3YiOjB9LCJpYXQiOjE1ODk3NzI5MjF9.Ig74NaGb72k1SUgCaZpQoEwO7q4r1UjrQcNzCXnph-M"
+        var decode = jwt.decode(token, process.env.JWT_SECRET)
+    } catch (err) {
+        console.log(err)
+    }
+    const comments = Comments();
+    comments.body = req.body.content
+    comments.postReference = req.post._id
+    comments.authorReference = decode.user._id
+    console.log(req.body.content, req.post._id, decode.user._id)
+    comments.save((err, result) => {
+        if(err) {
+            return res.status(401).json({
+                error : err
+            })
+        }
+        return res.json(result);
+    })
+    // return res.json({"good":"work"})
+}
+exports.loadComments = (req , res, next) => {    
+    Comments.find({postReference : req.post._id})
+    .then(data => {
+        console.log(data);
+        res.json(data)
+    })
+    .catch(err=>{console.log(err)})
+    // res.json({"search": "processing"})
+}
+exports.commentById = (req, res ,next, id) => {
+    Comments.find({_id:id})
+    .then((result, error) => {
+        if(error) {
+            console.log(error);
+            res.status(403).json({
+                error:error
+            })
+        }
+        req.comments = result;
+        next();
+    })
+    
+}
+exports.deleteComment = (req, res, next) => {
+    let comment = req.comments;
+    console.log(comment)
+    comment[0].remove((err, com)=> {
+        if(err) {
+            res.status(401).json({
+                error : err,
+            })
+        }
+        console.log("Deleted")
+        res.json({
+            "message":"comment deleted successfully"
+        })
+    })
 }
