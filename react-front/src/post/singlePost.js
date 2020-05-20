@@ -15,6 +15,7 @@ export default class singlePost extends Component {
         deleted:false,
         comments: 0,
         commentedBy: "",
+        mapId_Author: new Map(),
     }
     componentDidMount = () => {
         const postId = this.props.match.params.postId
@@ -64,6 +65,10 @@ export default class singlePost extends Component {
                 }
                 else {
                     this.setState({comments:result});
+                    result.map((res, i) => {
+                        this.getUserName(res.authorReference)
+                    })
+                    console.log(this.state.mapId_Author)
                 }
             })
     }
@@ -75,10 +80,9 @@ export default class singlePost extends Component {
             if(data.error) {
                 console.log(data.error)
             }
-            // console.log(data.user.name)
             username = data.user.name;
             console.log(username)
-            this.setState({commentedBy : username})
+            this.setState({mapId_Author: this.state.mapId_Author.set(userId, username)})
             return
         })
     }
@@ -89,12 +93,14 @@ export default class singlePost extends Component {
                 {Comments.map((comment,i) =>{
                     return(
                     <div key={i}>
-                            {/* {this.getUserName(comment.authorReference)} */}
-                            <Link 
-                                to={`/user/${comment.authorReference}`}
-                            >
-                                user
-                            </Link>                          
+                            <p>
+                                    Commented By : 
+                                <Link 
+                                    to={`/user/${comment.authorReference}`}
+                                >
+                                {this.state.mapId_Author.get(comment.authorReference)}
+                                </Link>   
+                            </p>                
                             <p>{comment.body}</p>                        
                         <hr/>
                     </div>
@@ -151,12 +157,16 @@ export default class singlePost extends Component {
 
                 </div>    
                 </div>
+                
                 <div className="container">
-                    <p>Comments({this.state.comments.length})</p>
+                    <p className="display-4 mt-2 mb-3">Comments({this.state.comments.length})</p>
                     <hr/>
                     {this.state.comments.length ? this.loadComments(this.state.comments) : null}
                 </div>
+                
             </div>
+
+            
                 }
              
         </div>
