@@ -99,3 +99,39 @@ export const getComments = (postID) => {
         console.log(err);
     })
 }
+
+export const postComments = (commentBody, postID ,token) => {
+    console.log(postID)
+    return fetch(`${process.env.REACT_APP_API_URL}/post/${postID}`, {
+        method: "POST",
+        headers: {
+            Accept:"application/json",   
+            "Content-Type":"application/json",         
+            Authorization:`Bearer ${token}`
+        },
+        body: JSON.stringify(commentBody)
+    })
+    .then(data=>{
+        console.log(data);
+        return data;
+    })
+    .catch(err => {
+        console.log(err);
+    })
+}
+export const deleteComment = (commentId, token) => {
+    return fetch(`${process.env.REACT_APP_API_URL}/comments/${commentId}`, {
+        method: "DELETE",
+        headers: {
+            Accept:"application/json",
+            "Content-Type":"application/json",
+            Authorization:`Bearer ${token}`
+        },
+    })
+    .then(response => {
+        return response
+    })
+    .catch(err => {
+        console.log(err)
+    })
+}

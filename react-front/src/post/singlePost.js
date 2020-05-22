@@ -1,5 +1,9 @@
 import React,{Component} from 'react';
-import {SinglePost ,remove ,getComments} from "./apiPost"
+import {SinglePost ,
+        remove ,
+        getComments, 
+        postComments,
+        deleteComment} from "./apiPost"
 import { Link ,Redirect} from 'react-router-dom';
 import {isAuthenticated} from "../auth/index"
 import {getUser} from '../user/apiUser'
@@ -16,6 +20,7 @@ export default class singlePost extends Component {
         comments: 0,
         commentedBy: "",
         mapId_Author: new Map(),
+        commentText:""
     }
     componentDidMount = () => {
         const postId = this.props.match.params.postId
@@ -34,6 +39,10 @@ export default class singlePost extends Component {
                 })
             }
         })
+    }
+    onHandleChange = (name) => (event) => {
+
+        this.setState({[name] : event.target.value});
     }
     deletePost = () => {
         console.log("FF")
@@ -74,7 +83,6 @@ export default class singlePost extends Component {
     }
     getUserName = (userId) => {
         let username;
-        console.log(userId)
         getUser(userId)
         .then(data=> {
             if(data.error) {
@@ -86,21 +94,43 @@ export default class singlePost extends Component {
             return
         })
     }
+    deleteComments = (commentId) => (event) => {
+        console.log(commentId)
+        const tokens = isAuthenticated().token;
+        deleteComment(commentId, tokens)
+        .then(data => {
+            if(data.error) {
+                console.log("Error")
+            }
+            window.location.reload();
+        })
+
+
+    }
     loadComments = (Comments) => {
-        console.log(Comments)
         return (
             <div>
                 {Comments.map((comment,i) =>{
                     return(
                     <div key={i}>
-                            <p>
+                            <div style={{display:"inline-block"}}>
                                     Commented By : 
-                                <Link 
+                                <Link
                                     to={`/user/${comment.authorReference}`}
                                 >
                                 {this.state.mapId_Author.get(comment.authorReference)}
                                 </Link>   
-                            </p>                
+                            </div>
+                            <div style={{display:"inline-block", paddingLeft:"23px", float:"right" }}>
+                                {
+                                    comment.authorReference == isAuthenticated().user._id ?
+                                    <a style={{}}>
+                                    <button onClick={this.deleteComments(comment._id)}>Delete</button>
+                                    </a> 
+                                        :
+                                    null
+                                }
+                            </div>             
                             <p>{comment.body}</p>                        
                         <hr/>
                     </div>
@@ -109,6 +139,30 @@ export default class singlePost extends Component {
                 }
            </div>
         )
+    }
+    postComment = (event) => {
+        event.preventDefault();
+        const content = this.state.commentText;
+        const user_id = isAuthenticated().user._id;
+        const token = isAuthenticated().token
+        const postId = this.props.match.params.postId
+        const comment = {
+            content,
+            user_id           
+        }
+        console.log(JSON.stringify(comment))
+        postComments(comment, postId, token)
+        .then(data => {
+            if(data.error) {
+                console.log("Error")
+            }
+            this.setState({commentText:""})
+            window.location.reload();
+        })
+        .catch(err => {
+            console.log(err);
+        })
+        
     }
     render() {
         if(this.state.deleted) {
@@ -158,7 +212,14 @@ export default class singlePost extends Component {
                 </div>    
                 </div>
                 
-                <div className="container">
+                <div className="container" display="block">
+                    {isAuthenticated() ? 
+                    <>
+                        <textarea rows="3" cols="70" onChange={this.onHandleChange("commentText")} value={this.state.commentText}></textarea>
+                        <button type="submit" onClick={this.postComment}>Comment</button>
+                    </>
+                    : 
+                    null}
                     <p className="display-4 mt-2 mb-3">Comments({this.state.comments.length})</p>
                     <hr/>
                     {this.state.comments.length ? this.loadComments(this.state.comments) : null}

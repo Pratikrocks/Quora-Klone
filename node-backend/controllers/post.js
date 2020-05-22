@@ -142,17 +142,13 @@ exports.singlePost = (req,res,next) =>{
 }
 //    comments backend
 exports.addComment = (req ,res ,next) => {
-    try {
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZvbGxvd2luZyI6W10sImZvbGxvd2VycyI6W10sIl9pZCI6IjVlYzE2ZmRiYjUzZWI5MGM0NzljOWNhYiIsIm5hbWUiOiJ1c2VyXzIiLCJlbWFpbCI6InVzZXJfMkBnbWFpbC5jb20iLCJzYWx0IjoiMzYxYTYyZDAtOTg2MS0xMWVhLTk3OWUtNzFjNTkxOWMyZmM1IiwiaGFzaGVkX3Bhc3N3b3JkIjoiYWNlMjA0N2I1ZjAwMjk0OGVkMjYwNDA0YzlkNmRkOTFlNmU0MmE2OCIsImNyZWF0ZWQiOiIyMDIwLTA1LTE3VDE3OjA5OjQ3LjUxOFoiLCJfX3YiOjB9LCJpYXQiOjE1ODk3NzI5MjF9.Ig74NaGb72k1SUgCaZpQoEwO7q4r1UjrQcNzCXnph-M"
-        var decode = jwt.decode(token, process.env.JWT_SECRET)
-    } catch (err) {
-        console.log(err)
-    }
+    
+    console.log("user id is: ", req.body)
     const comments = Comments();
     comments.body = req.body.content
     comments.postReference = req.post._id
-    comments.authorReference = decode.user._id
-    console.log(req.body.content, req.post._id, decode.user._id)
+    comments.authorReference = req.body.user_id
+    console.log(req.body.content, req.post._id)
     comments.save((err, result) => {
         if(err) {
             return res.status(401).json({
@@ -161,6 +157,7 @@ exports.addComment = (req ,res ,next) => {
         }
         return res.json(result);
     })
+
     // return res.json({"good":"work"})
 }
 exports.loadComments = (req , res, next) => {    
