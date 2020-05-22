@@ -148,6 +148,7 @@ exports.addComment = (req ,res ,next) => {
     comments.body = req.body.content
     comments.postReference = req.post._id
     comments.authorReference = req.body.user_id
+    comments.commentedAt = new Date()
     console.log(req.body.content, req.post._id)
     comments.save((err, result) => {
         if(err) {

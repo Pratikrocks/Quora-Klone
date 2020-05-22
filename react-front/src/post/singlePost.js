@@ -121,6 +121,16 @@ export default class singlePost extends Component {
                                 {this.state.mapId_Author.get(comment.authorReference)}
                                 </Link>   
                             </div>
+                            <div style={{display:"inline-block", paddingLeft:"23px" }}>
+                                {
+                                    comment.commentedAt ?
+                                    <>
+                                        Commented On :{new Date(comment.commentedAt).toDateString()}, {(new Date(comment.commentedAt).toTimeString()).split(' ').slice(0,1)}    
+                                    </> 
+                                        :
+                                    null
+                                }
+                            </div>      
                             <div style={{display:"inline-block", paddingLeft:"23px", float:"right" }}>
                                 {
                                     comment.authorReference == isAuthenticated().user._id ?
@@ -130,7 +140,8 @@ export default class singlePost extends Component {
                                         :
                                     null
                                 }
-                            </div>             
+                            </div> 
+
                             <p>{comment.body}</p>                        
                         <hr/>
                     </div>
