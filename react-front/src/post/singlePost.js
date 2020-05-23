@@ -133,7 +133,7 @@ export default class singlePost extends Component {
                                 {
                                     comment.authorReference == isAuthenticated().user._id ?
                                     <a style={{}}>
-                                    <button onClick={this.deleteComments(comment._id)}>Delete</button>
+                                    <button class="btn btn-raised btn-danger mr-5" onClick={this.deleteComments(comment._id)}>Delete</button>
                                     </a> 
                                         :
                                     null
@@ -226,15 +226,29 @@ export default class singlePost extends Component {
                 </div>    
                 </div>
                 
-                <div className="container" display="block">
+                <div className="container" style={{display:"block"}}>
                     {isAuthenticated() ? 
-                    <>
-                        <textarea rows="3" cols="70" onChange={this.onHandleChange("commentText")} value={this.state.commentText} style={{whiteSpace: "pre-line"}}></textarea>
-                        <button type="submit" onClick={this.postComment}>Comment</button>
-                    </>
+                    <div style={{position:"relative", display:"block"}}>
+                        <textarea rows="3" cols="70" onChange={this.onHandleChange("commentText")} value={this.state.commentText} style={{whiteSpace: "pre-line", display:"block"}}></textarea>
+                        <br/>
+                        
+                        <button class= "btn btn-raised btn-info mr-5" type="submit" onClick={this.postComment} style={{
+                            float:"right",
+                             position:"absolute",
+                             display:"block",
+                             height:"60px", 
+                             width:"100px",
+                             borderRadius:"10%"
+                            }}
+                        >
+                                 Comment
+                        </button>
+                    </div>
                     : 
                     null}
-                    <p className="display-4 mt-2 mb-3">Comments({this.state.comments.length})</p>
+                    <br/>
+                    <br/>
+                    <p className="display-4 mt-2 mb-3" style={{display:"block"}}>Comments({this.state.comments.length})</p>
                     <hr/>
                     {this.state.comments.length ? this.loadComments(this.state.comments) : null}
                 </div>
