@@ -1,6 +1,8 @@
 const Post = require("../models/post")
+const Comments = require('../models/comments')
 const formidable = require("formidable")
 const fs = require('fs')
+const jwt = require("jsonwebtoken")
 const _ = require('lodash')
 exports.postById = (req,res,next,id)=>{
 
@@ -137,4 +139,63 @@ exports.photo = (req,res,next) => {
 exports.singlePost = (req,res,next) =>{
     console.log(req.post)
     return res.json(req.post)
+}
+//    comments backend
+exports.addComment = (req ,res ,next) => {
+    
+    console.log("user id is: ", req.body)
+    const comments = Comments();
+    comments.body = req.body.content
+    comments.postReference = req.post._id
+    comments.authorReference = req.body.user_id
+    comments.commentedAt = new Date()
+    console.log(req.body.content, req.post._id)
+    comments.save((err, result) => {
+        if(err) {
+            return res.status(401).json({
+                error : err
+            })
+        }
+        return res.json(result);
+    })
+
+    // return res.json({"good":"work"})
+}
+exports.loadComments = (req , res, next) => {    
+    Comments.find({postReference : req.post._id})
+    .then(data => {
+        console.log(data);
+        res.json(data)
+    })
+    .catch(err=>{console.log(err)})
+    // res.json({"search": "processing"})
+}
+exports.commentById = (req, res ,next, id) => {
+    Comments.find({_id:id})
+    .then((result, error) => {
+        if(error) {
+            console.log(error);
+            res.status(403).json({
+                error:error
+            })
+        }
+        req.comments = result;
+        next();
+    })
+    
+}
+exports.deleteComment = (req, res, next) => {
+    let comment = req.comments;
+    console.log(comment)
+    comment[0].remove((err, com)=> {
+        if(err) {
+            res.status(401).json({
+                error : err,
+            })
+        }
+        console.log("Deleted")
+        res.json({
+            "message":"comment deleted successfully"
+        })
+    })
 }

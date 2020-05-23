@@ -1,7 +1,13 @@
 import React,{Component} from 'react';
-import {SinglePost ,remove} from "./apiPost"
+import {SinglePost ,
+        remove ,
+        getComments, 
+        postComments,
+        deleteComment} from "./apiPost"
 import { Link ,Redirect} from 'react-router-dom';
 import {isAuthenticated} from "../auth/index"
+import {getUser} from '../user/apiUser'
+
 export default class singlePost extends Component {
     state = {
         postId : "",
@@ -10,7 +16,11 @@ export default class singlePost extends Component {
         postedBy: '',
         created:"",
         loading:true,
-        deleted:false
+        deleted:false,
+        comments: 0,
+        commentedBy: "",
+        mapId_Author: new Map(),
+        commentText:""
     }
     componentDidMount = () => {
         const postId = this.props.match.params.postId
@@ -30,9 +40,13 @@ export default class singlePost extends Component {
             }
         })
     }
+    onHandleChange = (name) => (event) => {
+
+        this.setState({[name] : event.target.value});
+        // console.log(this.state.commentText)
+    }
     deletePost = () => {
-        console.log("FF")
-        console.log(this.props.match.params.postId )
+        
         remove(this.props.match.params.postId,isAuthenticated().token)
         .then(data=>{
             if(data.err ){
@@ -50,6 +64,119 @@ export default class singlePost extends Component {
         {
             this.deletePost()
         }
+    }
+    componentWillMount = () => {
+        const postId = this.props.match.params.postId;
+        getComments(postId)
+            .then((result) => {
+                if(result.error) {
+
+                }
+                else {
+                    this.setState({comments:result});
+                    result.map((res, i) => {
+                        this.getUserName(res.authorReference)
+                    })
+                    console.log(this.state.mapId_Author)
+                }
+            })
+    }
+    getUserName = (userId) => {
+        let username;
+        getUser(userId)
+        .then(data=> {
+            if(data.error) {
+                console.log(data.error)
+            }
+            username = data.user.name;
+            this.setState({mapId_Author: this.state.mapId_Author.set(userId, username)})
+            return
+        })
+    }
+    deleteComments = (commentId) => (event) => {
+        const tokens = isAuthenticated().token;
+        deleteComment(commentId, tokens)
+        .then(data => {
+            if(data.error) {
+                console.log("Error")
+            }
+            window.location.reload();
+        })
+
+
+    }
+    loadComments = (Comments) => {
+        return (
+            <div>
+                {Comments.map((comment,i) =>{
+                    return(
+                    <div key={i}>
+                            <div style={{display:"inline-block"}}>
+                                    Commented By : 
+                                <Link
+                                    to={`/user/${comment.authorReference}`}
+                                >
+                                {this.state.mapId_Author.get(comment.authorReference)}
+                                </Link>   
+                            </div>
+                            <div style={{display:"inline-block", paddingLeft:"23px" }}>
+                                {
+                                    comment.commentedAt ?
+                                    <>
+                                        Commented On :{new Date(comment.commentedAt).toDateString()}, {(new Date(comment.commentedAt).toTimeString()).split(' ').slice(0,1)}    
+                                    </> 
+                                        :
+                                    null
+                                }
+                            </div>      
+                            <div style={{display:"inline-block", paddingLeft:"23px", float:"right" }}>
+                                {
+                                    comment.authorReference == isAuthenticated().user._id ?
+                                    <a style={{}}>
+                                    <button onClick={this.deleteComments(comment._id)}>Delete</button>
+                                    </a> 
+                                        :
+                                    null
+                                }
+                            </div> 
+
+                            <p>{comment.body}</p>                        
+                        <hr/>
+                    </div>
+                    )
+                })
+                }
+           </div>
+        )
+    }
+    postComment = (event) => {
+        event.preventDefault();
+        var content = "";
+        const user_id = isAuthenticated().user._id;
+        const token = isAuthenticated().token
+        const postId = this.props.match.params.postId
+        content = this.state.commentText
+        console.log("content is", content)
+
+        const comment = {
+            content,
+            user_id           
+        }
+
+        console.log(this.state.commentText)
+        // console.log(JSON.stringify(comment))
+        postComments(comment, postId, token)
+        .then(data => {
+            if(data.error) {
+                console.log("Error")
+            }
+            this.setState({commentText:""})
+            window.location.reload();
+        })
+        .catch(err => {
+            console.log(err);
+        })
+        
     }
     render() {
         if(this.state.deleted) {
@@ -98,7 +225,23 @@ export default class singlePost extends Component {
 
                 </div>    
                 </div>
+                
+                <div className="container" display="block">
+                    {isAuthenticated() ? 
+                    <>
+                        <textarea rows="3" cols="70" onChange={this.onHandleChange("commentText")} value={this.state.commentText} style={{whiteSpace: "pre-line"}}></textarea>
+                        <button type="submit" onClick={this.postComment}>Comment</button>
+                    </>
+                    : 
+                    null}
+                    <p className="display-4 mt-2 mb-3">Comments({this.state.comments.length})</p>
+                    <hr/>
+                    {this.state.comments.length ? this.loadComments(this.state.comments) : null}
+                </div>
+                
             </div>
+
+            
                 }
              
         </div>

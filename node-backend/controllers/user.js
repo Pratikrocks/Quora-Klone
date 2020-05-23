@@ -75,6 +75,12 @@ exports.getUser = (req,res) =>{
 //     })
 
 // }
+exports.getParticularUser = (req, res, next) => {
+    return res.json({
+        "user": req.profile
+    })
+}
+
 exports.userPhoto = (req,res,next)=>{
     // console.log(req.profile.photo)
     // console.log("Profile photo requested")
