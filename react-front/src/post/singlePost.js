@@ -43,10 +43,10 @@ export default class singlePost extends Component {
     onHandleChange = (name) => (event) => {
 
         this.setState({[name] : event.target.value});
+        // console.log(this.state.commentText)
     }
     deletePost = () => {
-        console.log("FF")
-        console.log(this.props.match.params.postId )
+        
         remove(this.props.match.params.postId,isAuthenticated().token)
         .then(data=>{
             if(data.err ){
@@ -89,13 +89,11 @@ export default class singlePost extends Component {
                 console.log(data.error)
             }
             username = data.user.name;
-            console.log(username)
             this.setState({mapId_Author: this.state.mapId_Author.set(userId, username)})
             return
         })
     }
     deleteComments = (commentId) => (event) => {
-        console.log(commentId)
         const tokens = isAuthenticated().token;
         deleteComment(commentId, tokens)
         .then(data => {
@@ -153,15 +151,20 @@ export default class singlePost extends Component {
     }
     postComment = (event) => {
         event.preventDefault();
-        const content = this.state.commentText;
+        var content = "";
         const user_id = isAuthenticated().user._id;
         const token = isAuthenticated().token
         const postId = this.props.match.params.postId
+        content = this.state.commentText
+        console.log("content is", content)
+
         const comment = {
             content,
             user_id           
         }
-        console.log(JSON.stringify(comment))
+
+        console.log(this.state.commentText)
+        // console.log(JSON.stringify(comment))
         postComments(comment, postId, token)
         .then(data => {
             if(data.error) {
@@ -226,7 +229,7 @@ export default class singlePost extends Component {
                 <div className="container" display="block">
                     {isAuthenticated() ? 
                     <>
-                        <textarea rows="3" cols="70" onChange={this.onHandleChange("commentText")} value={this.state.commentText}></textarea>
+                        <textarea rows="3" cols="70" onChange={this.onHandleChange("commentText")} value={this.state.commentText} style={{whiteSpace: "pre-line"}}></textarea>
                         <button type="submit" onClick={this.postComment}>Comment</button>
                     </>
                     : 
