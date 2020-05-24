@@ -157,7 +157,9 @@ export default class singlePost extends Component {
         const user_id = isAuthenticated().user._id;
         const token = isAuthenticated().token
         const postId = this.props.match.params.postId
+        // console.log(this.state.commentText)
         content = this.state.commentText
+
         console.log("content is", content)
 
         const comment = {
@@ -167,7 +169,7 @@ export default class singlePost extends Component {
 
         console.log(this.state.commentText)
         // console.log(JSON.stringify(comment))
-        if(content == "") {
+        if(content == "" || content.trim() == "") {
             this.setState({
                 error : "The body of the comment is empty"
             });
