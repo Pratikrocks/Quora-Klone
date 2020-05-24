@@ -20,7 +20,8 @@ export default class singlePost extends Component {
         comments: 0,
         commentedBy: "",
         mapId_Author: new Map(),
-        commentText:""
+        commentText:"",
+        error:"",
     }
     componentDidMount = () => {
         const postId = this.props.match.params.postId
@@ -43,6 +44,7 @@ export default class singlePost extends Component {
     onHandleChange = (name) => (event) => {
 
         this.setState({[name] : event.target.value});
+        this.setState({error:""})
         // console.log(this.state.commentText)
     }
     deletePost = () => {
@@ -165,6 +167,13 @@ export default class singlePost extends Component {
 
         console.log(this.state.commentText)
         // console.log(JSON.stringify(comment))
+        if(content == "") {
+            this.setState({
+                error : "The body of the comment is empty"
+            });
+            return 
+        }
+    
         postComments(comment, postId, token)
         .then(data => {
             if(data.error) {
@@ -243,12 +252,24 @@ export default class singlePost extends Component {
                         >
                                  Comment
                         </button>
+                        
                     </div>
                     : 
                     null}
                     <br/>
+                    
                     <br/>
                     <p className="display-4 mt-2 mb-3" style={{display:"block"}}>Comments({this.state.comments.length})</p>
+                    <hr/>
+
+                    {this.state.error ? 
+                            <div>
+                                <p class="alert alert-danger">{this.state.error}</p>        
+                            </div>
+                            :
+                            null
+                        }
+                    <hr/>
                     <hr/>
                     {this.state.comments.length ? this.loadComments(this.state.comments) : null}
                 </div>
@@ -259,14 +280,6 @@ export default class singlePost extends Component {
                 }
              
         </div>
-
-
-
-
-
-
-
-
 
         )
     }
