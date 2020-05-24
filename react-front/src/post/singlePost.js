@@ -201,7 +201,7 @@ export default class singlePost extends Component {
                         <div className="jumbotron text-center">
                             <h2>Loading...</h2>
                         </div>:
-            <div className="container">
+            <div className="container" stye={{position:"relative"}}>
             <h2 className="display-2 mt-2 mb-3">{ title }</h2>
                      
               <div className="row">
@@ -235,7 +235,7 @@ export default class singlePost extends Component {
                 </div>    
                 </div>
                 
-                <div className="container" style={{display:"block"}}>
+                <div className="container" style={{display:"block", position:"absolute"}}>
                     {isAuthenticated() ? 
                     <div style={{position:"relative", display:"block"}}>
                         <textarea rows="3" cols="70" onChange={this.onHandleChange("commentText")} value={this.state.commentText} style={{whiteSpace: "pre-line", display:"block"}}></textarea>
@@ -245,9 +245,6 @@ export default class singlePost extends Component {
                             float:"right",
                              position:"absolute",
                              display:"block",
-                             height:"60px", 
-                             width:"100px",
-                             borderRadius:"10%"
                             }}
                         >
                                  Comment
