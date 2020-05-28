@@ -44,9 +44,7 @@ exports.signin = (req,res) =>{
         const name = user.name;
         const _id = user._id;
         const email = user.email
-        // console.log(token,_id,email,name)
-        // console.log("USER SIGNIN")
-        // console.log(user)
+        
         return res.json({token,user:{_id,email,name}}) 
     })
     // console.log("User not found")
