@@ -45,7 +45,7 @@ export default class singlePost extends Component {
 
         this.setState({[name] : event.target.value});
         this.setState({error:""})
-        // console.log(this.state.commentText)
+        
     }
     deletePost = () => {
         
