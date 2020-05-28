@@ -7,6 +7,7 @@ import {SinglePost ,
 import { Link ,Redirect} from 'react-router-dom';
 import {isAuthenticated} from "../auth/index"
 import {getUser} from '../user/apiUser'
+import "./singlePost.css"
 
 export default class singlePost extends Component {
     state = {
@@ -17,11 +18,14 @@ export default class singlePost extends Component {
         created:"",
         loading:true,
         deleted:false,
+// for comments 
         comments: 0,
         commentedBy: "",
         mapId_Author: new Map(),
         commentText:"",
         error:"",
+// for likes
+        currentUserLiked: false,
     }
     componentDidMount = () => {
         const postId = this.props.match.params.postId
@@ -151,6 +155,9 @@ export default class singlePost extends Component {
            </div>
         )
     }
+    toggle = (event) => {
+        this.setState({currentUserLiked:!this.state.currentUserLiked});
+    }
     postComment = (event) => {
         event.preventDefault();
         var content = "";
@@ -231,7 +238,11 @@ export default class singlePost extends Component {
                            
                            <Link href="#" class="btn btn-raised btn-danger mr-5" to={`/posts/`} onClick={this.deleteConfirmed}>Delete Post</Link>
                             </> : null }
-                   
+                            { isAuthenticated() ? 
+                              <>  
+                                <i  onClick={this.toggle} class= {this.state.currentUserLiked ? "fa fa-thumbs-down" : "fa fa-thumbs-up"} style={{fontSize:"2rem", paddingRight:"15px"}}></i>
+                              </> : null 
+                            }
                       </p>
 
                 </div>    
