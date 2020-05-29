@@ -3,6 +3,7 @@ import {findPeople, follow} from './apiUser'
 import DefaultProfile from '../images/avatar.png'
 import { Link } from 'react-router-dom';
 import {isAuthenticated} from '../auth'
+import '../core/Home.css'
 
 export default class FindPeople extends Component
 {
@@ -92,18 +93,20 @@ export default class FindPeople extends Component
     {
 
         return(
-            <div className="container">
+            <div className="background">
+                <div className="container">
 
-                <h2 className="mt-5 mb-5">Follow People</h2>
-                   {this.state.open && <div className="alert alert-success">
-                            {this.state.open && 
-                                <p>
-                                    {this.state.followMessage}
-                                </p>
-                            }
-                    </div>
-                }
-                    {this.renderUser(this.state.users)}
+                    <h2 className="mt-0 mb-5">Follow People</h2>
+                    {this.state.open && <div className="alert alert-success">
+                                {this.state.open && 
+                                    <p>
+                                        {this.state.followMessage}
+                                    </p>
+                                }
+                        </div>
+                    }
+                        {this.renderUser(this.state.users)}
+                </div>
             </div>
         )
     }

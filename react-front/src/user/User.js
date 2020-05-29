@@ -2,7 +2,10 @@ import React, {Component} from 'react';
 import {list} from './apiUser'
 import DefaultProfile from '../images/avatar.png'
 import { Link } from 'react-router-dom';
+import "../core/Home.css"
+
 export default class User extends Component
+
 {
     constructor(props)
     {
@@ -64,10 +67,12 @@ export default class User extends Component
     {
         // {console.log("YYYy",this.state.users)}
         return(
-            <div className="container">
-                {/* {console.log(this.state.users)} */}
-                <h2 className="mt-5 mb-5">Users</h2>
-                    {this.renderUser(this.state.users)}
+            <div className="background" style={{height:"100%" ,top:"0", paddingTop:"0px"}}>
+                <div className="container" >
+                    {/* {console.log(this.state.users)} */}
+                    <h2 className="mt-0 mb-5">Users</h2>
+                        {this.renderUser(this.state.users)}
+                </div>
             </div>
         )
     }

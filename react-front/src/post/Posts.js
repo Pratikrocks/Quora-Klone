@@ -3,6 +3,7 @@ import { list } from './apiPost'
 import DefaultProfile from '../images/PostImage.jpg'
 import { Link } from 'react-router-dom';
 import "./posts.css"
+import "../core/Home.css"
 
 export default class Posts extends Component
 {
@@ -79,10 +80,12 @@ export default class Posts extends Component
     {
         {console.log("YYYy",this.state.posts)}
         return(
-            <div className="container">
-                {console.log(this.state.posts)}
-                <h2 className="mt-5 mb-5 buldge">Recent Posts</h2>
-                    {this.renderPosts(this.state.posts)}
+            <div className="background">
+                <div className="container">
+                    {console.log(this.state.posts)}
+                    <h2 className="mt-0 mb-5 buldge">Recent Posts</h2>
+                        {this.renderPosts(this.state.posts)}
+                </div>
             </div>
         )
     }
