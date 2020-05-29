@@ -7,6 +7,8 @@ const isActive = (history,path)=>{
     if(history.location.pathname===path)
     {
         return {color:"#ff9900"}
+    } else {
+        return {color : "white"}
     }
    
 }
@@ -16,7 +18,9 @@ const Menu = ({history}) =>(
     <div>
        
         {!isAuthenticated() && (
-            <ul class="nav nav-tabs bg-primary">              
+            <ul class="nav nav-tabs " style={{background:"purple"}}>
+                <div style={{flex:"1"}}>
+                </div>              
                 <li class="nav-item active">
                     <Link className="nav-link" style={isActive(history,"/")} to="/">Home</Link>
                 </li>
@@ -36,12 +40,14 @@ const Menu = ({history}) =>(
             </ul>        
     )}
         {isAuthenticated() && (
-            <ul className="nav nav-tabs bg-primary">
+            <ul className="nav nav-tabs" style={{background:"purple"}}>
+            <div style={{flex:"1"}}>
+            </div>         
             <li class = "nav-item">
                     
                     <Link className="nav-link"
                         
-                        style={isActive(history,"/"),{cursor:"pointer",color:"#fff"}}                
+                        style={isActive(history,"/")}                
                         to={'/'}
                         >
                             Home
