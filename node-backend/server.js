@@ -51,7 +51,7 @@ app.use(function (err, req, res, next) {
     }
   });
 
-const port = process.env.PORT;
+const port = process.env.PORT || 8081;
 app.listen(port,()=>{
     console.log(`Listening to port ${port}`)    
 })

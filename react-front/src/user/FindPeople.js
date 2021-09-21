@@ -25,7 +25,7 @@ export default class FindPeople extends Component
         console.log(userId)
         findPeople(userId,token)
         .then(response=>{
-            if(response.error)
+            if(response == undefined || response.error)
             {
                 console.log(response.error)
             }

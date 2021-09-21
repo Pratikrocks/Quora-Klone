@@ -18,7 +18,7 @@ exports.signup = async (req,res)=>{
 exports.signin = (req,res) =>{
 
     const {email,password} = req.body;
-    User.findOne({email},(err,user)=>{
+    User.findOne({email},{photo: 0},(err,user)=>{
 
         if(err || !user)
         {
@@ -37,6 +37,16 @@ exports.signin = (req,res) =>{
         // store the token in a cookie with expiry date
         // return the response as a frontend client
         // console.log(user)
+        
+
+        if (user.photo !== undefined) delete user.photo
+
+        const {photo, ...tokenuser} = user
+
+        console.log('*********', user, typeof tokenuser)
+
+        
+
         const token = jwt.sign({user:user},process.env.JWT_SECRET)
         
         res.cookie("t",token,{expire: new Date()+9999});

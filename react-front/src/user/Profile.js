@@ -96,10 +96,11 @@ class Profile extends React.Component
         {   return(
             <Redirect to="/signin"/>)
         }
-        const photoUrl = this.state.user._id?`${process.env.REACT_APP_API_URL}/user/photo/
-            ${this.state.user._id}?${new Date().getTime()}`
+        // `${process.env.REACT_APP_API_URL}/user/photo/${user._id}?${new Date().getTime()}`
+        const photoUrl = this.state.user._id?`${process.env.REACT_APP_API_URL}/user/photo/${this.state.user._id}?${new Date().getTime()}`
             : 
         DefaultProfile
+        console.log("photo url is : ",photoUrl)
         return(
             
             <div className="container">
